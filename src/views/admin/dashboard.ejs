@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Admin Dashboard</title>
+  <link rel="stylesheet" href="/styles/admin.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>Admin Dashboard</h1>
+
+    <nav>
+      <button onclick="showSection('users')">View Users</button>
+      <button onclick="showSection('tasks')">View Tasks</button>
+    </nav>
+
+    <section id="usersSection" class="data-section">
+      <h2>Users</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Created At</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% users.forEach(user => { %>
+            <tr>
+              <td><%= user.email %></td>
+              <td><%= user.role %></td>
+              <td><%= new Date(user.createdAt).toLocaleString() %></td>
+            </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="tasksSection" class="data-section hidden">
+      <h2>Tasks</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>User</th>
+            <th>Status</th>
+            <th>Created At</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% tasks.forEach(task => { %>
+            <tr>
+              <td><%= task.title %></td>
+              <td><%= task.userId?.email || 'N/A' %></td>
+              <td><%= task.completed ? 'Completed' : 'Pending' %></td>
+              <td><%= new Date(task.createdAt).toLocaleString() %></td>
+            </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    </section>
+  </div>
+
+  <script>
+    function showSection(id) {
+      document.querySelectorAll('.data-section').forEach(section => {
+        section.classList.add('hidden');
+      });
+      document.getElementById(id + 'Section').classList.remove('hidden');
+    }
+  </script>
+</body>
+</html>

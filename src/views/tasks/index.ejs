@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>My Tasks</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f4f6f8;
+      margin: 0;
+      padding: 2rem;
+      color: #333;
+    }
+    .logout-btn {
+      position: absolute;
+      top: 24px;
+      right: 40px;
+      background: #e74c3c;
+      color: #fff;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: background 0.2s;
+      text-decoration: none;
+      z-index: 10;
+    }
+    .logout-btn:hover {
+      background: #c0392b;
+    }
+    h1 {
+      text-align: center;
+      color: #2c3e50;
+    }
+    form {
+      background: #fff;
+      padding: 1rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      max-width: 600px;
+      margin: 0 auto 2rem;
+    }
+    input, textarea, select {
+      width: 100%;
+      padding: 0.5rem;
+      margin: 0.5rem 0;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    button {
+      background: #3498db;
+      color: white;
+      border: none;
+      padding: 0.6rem 1.2rem;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #2980b9;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+      max-width: 800px;
+      margin: auto;
+    }
+    li {
+      background: white;
+      margin-bottom: 1rem;
+      padding: 1rem;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      position: relative;
+      border-left: 6px solid #ccc;
+    }
+
+    li.low {
+      border-left-color: #2ecc71;
+    }
+    li.medium {
+      border-left-color: #f1c40f;
+    }
+    li.high {
+      border-left-color: #e74c3c;
+    }
+
+    .priority-label {
+      display: inline-block;
+      padding: 2px 8px;
+      font-size: 0.8rem;
+      border-radius: 4px;
+      color: white;
+      margin-left: 8px;
+    }
+    .priority-low {
+      background-color: #2ecc71;
+    }
+    .priority-medium {
+      background-color: #f39c12;
+    }
+    .priority-high {
+      background-color: #e74c3c;
+    }
+
+    .icons {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+    }
+    .icons span {
+      cursor: pointer;
+      margin-left: 0.5rem;
+      font-size: 1.2rem;
+    }
+  </style>
+</head>
+<body>
+
+<a href="/auth/logout" class="logout-btn">Logout</a>
+
+<h1>My Tasks</h1>
+
+<!-- Add Task Form -->
+<form action="/tasks" method="POST">
+  <input type="text" name="title" placeholder="Task title" required>
+  <textarea name="description" placeholder="Description"></textarea>
+  <select name="priority" required>
+    <option value="low">Low Priority</option>
+    <option value="medium">Medium Priority</option>
+    <option value="high">High Priority</option>
+  </select>
+  <button type="submit">Add Task</button>
+</form>
+
+<!-- Task List -->
+<ul>
+  <% if (tasks && tasks.length > 0) { %>
+    <% tasks.forEach(task => { %>
+      <li class="<%= task.priority %>">
+        <strong><%= task.title %></strong>
+        <span class="priority-label priority-<%= task.priority %>"><%= task.priority.toUpperCase() %></span>
+        <p><%= task.description %></p>
+
+        <div class="icons">
+          <form action="/tasks/<%= task._id %>?_method=DELETE" method="POST" style="display:inline;">
+            <button type="submit" title="Delete" style="border: none; background: none; padding: 0; cursor: pointer; font-size: 1.2rem;">❌</button>
+          </form>
+        </div>
+      </li>
+    <% }) %>
+  <% } else { %>
+    <p style="text-align: center;">No tasks yet. Add one above!</p>
+  <% } %>
+</ul>
+
+</body>
+</html>
