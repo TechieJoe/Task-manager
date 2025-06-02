@@ -55,6 +55,7 @@ async login(@Body() dto: LoginDto, @Res() res: Response, @Req() req: Request) {
   try {
     const { access_token } = await this.authService.login(dto);
     res.cookie('jwt', access_token, { httpOnly: true });
+    console.log('Login successful, JWT set in cookie');
     return res.redirect('/tasks');
   } catch (error) {
     let messages: string[] = ['Invalid credentials.'];
