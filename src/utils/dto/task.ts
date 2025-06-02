@@ -1,5 +1,4 @@
-import { PartialType } from '@nestjs/swagger';
-import { IsNotEmpty, IsOptional, IsString, IsDateString, IsIn, IsNumber, Min, ValidateIf, IsInt } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString, IsIn } from 'class-validator';
 
 export class CreateTaskDto {
   @IsNotEmpty()
@@ -20,8 +19,28 @@ export class CreateTaskDto {
 
   @IsOptional()
   @IsString()
-  userId: string; // This resolves the userId validation error
+  userId: string;
 }
 
+// UpdateTaskDto: all fields optional for PATCH/PUT
+export class UpdateTaskDto {
+  @IsOptional()
+  @IsString()
+  title?: string;
 
-export class UpdateTaskDto extends PartialType(CreateTaskDto) {}
+  @IsOptional()
+  @IsString()
+  description?: string;
+
+  @IsOptional()
+  @IsIn(['low', 'medium', 'high'])
+  priority?: string;
+
+  @IsOptional()
+  @IsIn(['none', 'daily', 'weekly', 'custom'])
+  recurrenceType?: string;
+
+  @IsOptional()
+  @IsString()
+  userId?: string;
+}
