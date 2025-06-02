@@ -21,6 +21,8 @@ export class AuthService {
     });
     await user.save();
     const payload = { sub: user._id, name: user.get('name')};
+    console.log('User registered successfully:', payload);
+    
     return {
       access_token: this.jwtService.sign(payload),
     };
