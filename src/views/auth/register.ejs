@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Register</title>
   <style>
     body {
@@ -10,7 +11,9 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      height: 100vh;
+      min-height: 100vh;
+      margin: 0;
+      padding: 1rem;
     }
 
     .form-wrapper {
@@ -26,12 +29,13 @@
       text-align: center;
       margin-bottom: 20px;
       color: #333;
+      font-size: 1.5rem;
     }
 
     .error-message {
       color: #d32f2f;
       margin-bottom: 15px;
-      font-size: 14px;
+      font-size: 0.9rem;
       text-align: center;
       background: #ffe0e0;
       padding: 10px;
@@ -45,6 +49,7 @@
       border: 1px solid #ccc;
       border-radius: 6px;
       font-size: 14px;
+      box-sizing: border-box;
     }
 
     button {
@@ -66,6 +71,7 @@
     .link-text {
       text-align: center;
       margin-top: 15px;
+      font-size: 0.95rem;
     }
 
     .link-text a {
@@ -76,16 +82,31 @@
     .link-text a:hover {
       text-decoration: underline;
     }
+
+    @media (max-width: 480px) {
+      .form-wrapper {
+        padding: 20px;
+      }
+
+      h2 {
+        font-size: 1.25rem;
+      }
+
+      button {
+        font-size: 15px;
+        padding: 10px;
+      }
+    }
   </style>
 </head>
 <body>
   <div class="form-wrapper">
     <h2> Register </h2>
-<% if (typeof errors !== 'undefined' && errors.length > 0) { %>
-  <% errors.forEach(function(message) { %>
-    <div class="error-message"><%= message %></div>
-  <% }) %>
-<% } %>
+    <% if (typeof errors !== 'undefined' && errors.length > 0) { %>
+      <% errors.forEach(function(message) { %>
+        <div class="error-message"><%= message %></div>
+      <% }) %>
+    <% } %>
 
     <form action="/auth/register" method="POST">
       <input type="text" name="name" placeholder="Full Name" required />
