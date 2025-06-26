@@ -13,9 +13,9 @@ import {
   Res,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
-import { CreateTaskDto, UpdateTaskDto } from 'src/utils/dto/task';
+import { CreateTaskDto, UpdateTaskDto } from '../utils/dto/task';
 import { TaskService } from './tasks.service';
-import { JwtAuthGuard } from 'src/utils/guard/jwt.guard';
+import { JwtAuthGuard } from '../utils/guard/jwt.guard';
 
 @Controller('tasks')
 @UseGuards(JwtAuthGuard)
