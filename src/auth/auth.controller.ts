@@ -42,7 +42,7 @@ export class AuthController {
     }
   }
 
-// ...existing code...
+
 
 @Get('login')
 getLogin(@Query('error') error: string, @Res() res: Response) {

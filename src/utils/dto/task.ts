@@ -33,10 +33,6 @@ export class UpdateTaskDto {
   priority?: string;
 
   @IsOptional()
-  @IsIn(['none', 'daily', 'weekly', 'custom'])
-  recurrenceType?: string;
-
-  @IsOptional()
   @IsString()
   userId?: string;
 }

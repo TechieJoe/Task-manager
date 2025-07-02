@@ -2,220 +2,659 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>My Tasks</title>
+  <title>TaskFlow - Modern Task Manager</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --primary: #4361ee;
+      --primary-dark: #3a56d4;
+      --secondary: #6c757d;
+      --success: #4cc9f0;
+      --warning: #f8961e;
+      --danger: #f72585;
+      --light: #f8f9fa;
+      --dark: #212529;
+      --card-bg: #ffffff;
+      --body-bg: #f0f2f5;
+      --text-color: #333333;
+      --border-color: #e0e0e0;
+      --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      --transition: all 0.3s ease;
+    }
+
+    .dark-mode {
+      --primary: #4895ef;
+      --primary-dark: #3a7bd5;
+      --secondary: #9e9e9e;
+      --success: #4cc9f0;
+      --warning: #ff9e00;
+      --danger: #ff4081;
+      --light: #2d2d2d;
+      --dark: #f5f5f5;
+      --card-bg: #1e1e1e;
+      --body-bg: #121212;
+      --text-color: #e0e0e0;
+      --border-color: #333333;
+      --shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    }
+
     * {
       box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
 
     body {
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #f4f6f8;
+      font-family: 'Poppins', 'Segoe UI', sans-serif;
+      background-color: var(--body-bg);
+      color: var(--text-color);
+      line-height: 1.6;
+      transition: var(--transition);
+      padding: 0;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1rem;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.5rem 2rem;
+      background: var(--card-bg);
+      box-shadow: var(--shadow);
+      border-radius: 0 0 12px 12px;
+      margin-bottom: 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo i {
+      color: var(--primary);
+      font-size: 1.8rem;
+    }
+
+    .logo h1 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--primary);
       margin: 0;
-      padding: 2rem;
-      color: #333;
+    }
+
+    .header-controls {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .theme-toggle {
+      background: var(--light);
+      border: none;
+      width: 50px;
+      height: 26px;
+      border-radius: 13px;
+      position: relative;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      padding: 0 3px;
+    }
+
+    .theme-toggle .toggle-handle {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--primary);
+      position: absolute;
+      left: 3px;
+      transition: transform 0.3s ease;
+    }
+
+    .theme-toggle.dark .toggle-handle {
+      transform: translateX(24px);
+      background: var(--warning);
     }
 
     .logout-btn {
-      position: absolute;
-      top: 24px;
-      right: 40px;
-      background: #e74c3c;
+      background: var(--primary);
       color: #fff;
       border: none;
-      padding: 0.5rem 1rem;
-      border-radius: 6px;
+      padding: 0.6rem 1.5rem;
+      border-radius: 30px;
       cursor: pointer;
-      font-size: 1rem;
-      transition: background 0.2s;
+      font-size: 0.95rem;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 500;
+      box-shadow: 0 4px 6px rgba(67, 97, 238, 0.3);
       text-decoration: none;
-      z-index: 10;
     }
 
     .logout-btn:hover {
-      background: #c0392b;
+      background: var(--primary-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 8px rgba(67, 97, 238, 0.4);
     }
 
-    h1 {
-      text-align: center;
-      color: #2c3e50;
+    .main-content {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2rem;
     }
 
-    form {
-      background: #fff;
-      padding: 1rem;
-      border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-      max-width: 600px;
-      margin: 0 auto 2rem;
+    @media (min-width: 992px) {
+      .main-content {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .form-section {
+      background: var(--card-bg);
+      padding: 1.8rem;
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      height: fit-content;
+      position: sticky;
+      top: 100px;
+    }
+
+    .form-section h2 {
+      margin-top: 0;
+      margin-bottom: 1.5rem;
+      font-size: 1.5rem;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .form-section h2 i {
+      background: rgba(67, 97, 238, 0.1);
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .form-group {
+      margin-bottom: 1.2rem;
+      position: relative;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: var(--text-color);
+      font-size: 0.95rem;
     }
 
     input, textarea, select {
       width: 100%;
-      padding: 0.5rem;
-      margin: 0.5rem 0;
-      border: 1px solid #ccc;
-      border-radius: 4px;
+      padding: 0.8rem 1rem;
+      margin: 0.3rem 0;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
       font-size: 1rem;
+      background: var(--card-bg);
+      color: var(--text-color);
+      font-family: 'Roboto', sans-serif;
+      transition: var(--transition);
     }
 
-    button {
-      background: #3498db;
+    input:focus, textarea:focus, select:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+    }
+
+    textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    .add-btn {
+      background: var(--primary);
       color: white;
       border: none;
-      padding: 0.6rem 1.2rem;
-      border-radius: 4px;
+      padding: 0.8rem 1.5rem;
+      border-radius: 8px;
       cursor: pointer;
       font-size: 1rem;
+      font-weight: 500;
+      width: 100%;
+      transition: var(--transition);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      margin-top: 0.5rem;
+      box-shadow: 0 4px 6px rgba(67, 97, 238, 0.3);
     }
 
-    button:hover {
-      background: #2980b9;
+    .add-btn:hover {
+      background: var(--primary-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 8px rgba(67, 97, 238, 0.4);
     }
 
-    ul {
+    .tasks-section {
+      background: var(--card-bg);
+      padding: 1.8rem;
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+    }
+
+    .tasks-section h2 {
+      margin-top: 0;
+      margin-bottom: 1.5rem;
+      font-size: 1.5rem;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .tasks-section h2 i {
+      background: rgba(67, 97, 238, 0.1);
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .task-filters {
+      display: flex;
+      gap: 0.8rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .filter-btn {
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      background: var(--light);
+      border: none;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: var(--transition);
+      color: var(--text-color);
+    }
+
+    .filter-btn.active, .filter-btn:hover {
+      background: var(--primary);
+      color: white;
+    }
+
+    .task-list {
       list-style: none;
       padding: 0;
-      max-width: 800px;
-      margin: auto;
     }
 
-    li {
-      background: white;
-      margin-bottom: 1rem;
-      padding: 1rem;
-      border-radius: 8px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    .task-item {
+      background: var(--card-bg);
+      margin-bottom: 1.2rem;
+      padding: 1.5rem;
+      border-radius: 12px;
+      box-shadow: var(--shadow);
       position: relative;
-      border-left: 6px solid #ccc;
+      border-left: 4px solid var(--border-color);
+      transition: var(--transition);
+      animation: fadeIn 0.4s ease;
     }
 
-    li.low {
-      border-left-color: #2ecc71;
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
-    li.medium {
-      border-left-color: #f1c40f;
+    .task-item:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
     }
 
-    li.high {
-      border-left-color: #e74c3c;
+    .task-item.low {
+      border-left-color: var(--success);
     }
 
-    .priority-label {
-      display: inline-block;
-      padding: 2px 8px;
-      font-size: 0.8rem;
-      border-radius: 4px;
-      color: white;
-      margin-left: 8px;
+    .task-item.medium {
+      border-left-color: var(--warning);
     }
 
-    .priority-low {
-      background-color: #2ecc71;
+    .task-item.high {
+      border-left-color: var(--danger);
     }
 
-    .priority-medium {
-      background-color: #f39c12;
+    .task-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 0.8rem;
     }
 
-    .priority-high {
-      background-color: #e74c3c;
-    }
-
-    .icons {
-      position: absolute;
-      top: 1rem;
-      right: 1rem;
-    }
-
-    .icons span {
-      cursor: pointer;
-      margin-left: 0.5rem;
+    .task-title {
       font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--text-color);
+      margin-right: 1rem;
+      flex: 1;
+    }
+
+    .task-actions {
+      display: flex;
+      gap: 0.8rem;
+    }
+
+    .task-action-btn {
+      background: none;
+      border: none;
+      color: var(--secondary);
+      cursor: pointer;
+      font-size: 1rem;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition);
+    }
+
+    .task-action-btn:hover {
+      background: rgba(0, 0, 0, 0.05);
+      color: var(--primary);
+    }
+
+    .task-action-btn.delete:hover {
+      color: var(--danger);
+      background: rgba(247, 37, 133, 0.1);
+    }
+
+    .task-description {
+      color: var(--secondary);
+      margin-bottom: 1.2rem;
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+
+    .task-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.85rem;
+      color: var(--secondary);
+    }
+
+    .priority {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.3rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+
+    .priority.low {
+      background: rgba(76, 201, 240, 0.15);
+      color: var(--success);
+    }
+
+    .priority.medium {
+      background: rgba(248, 150, 30, 0.15);
+      color: var(--warning);
+    }
+
+    .priority.high {
+      background: rgba(247, 37, 133, 0.15);
+      color: var(--danger);
+    }
+
+    .task-date {
+      font-size: 0.8rem;
+      opacity: 0.8;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: var(--secondary);
+    }
+
+    .empty-state i {
+      font-size: 4rem;
+      margin-bottom: 1.5rem;
+      color: var(--border-color);
+    }
+
+    .empty-state h3 {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+      color: var(--text-color);
+    }
+
+    .empty-state p {
+      max-width: 400px;
+      margin: 0 auto;
     }
 
     @media screen and (max-width: 768px) {
-      body {
+      header {
+        flex-direction: column;
+        gap: 1rem;
         padding: 1rem;
       }
-
-      .logout-btn {
-        position: static;
-        display: block;
-        width: 100%;
-        text-align: center;
-        margin-bottom: 1rem;
+      
+      .logo h1 {
+        font-size: 1.5rem;
       }
-
-      form, ul {
-        width: 100%;
-        max-width: 100%;
-      }
-
-      .icons {
+      
+      .form-section {
         position: static;
-        margin-top: 1rem;
-        text-align: right;
       }
     }
 
     @media screen and (max-width: 480px) {
-      input, textarea, select, button {
-        font-size: 0.95rem;
+      .task-header {
+        flex-direction: column;
+        gap: 0.8rem;
       }
-
-      .priority-label {
-        display: block;
-        margin-left: 0;
-        margin-top: 0.5rem;
+      
+      .task-actions {
+        align-self: flex-end;
       }
-
-      li {
-        padding: 0.8rem;
+      
+      .task-footer {
+        flex-direction: column;
+        gap: 0.8rem;
+        align-items: flex-start;
       }
     }
   </style>
 </head>
 <body>
+  <div class="container">
+    <header>
+      <div class="logo">
+        <i class="fas fa-tasks"></i>
+        <h1>TaskFlow</h1>
+      </div>
+      
+      <div class="header-controls">
+        <button class="theme-toggle" id="themeToggle">
+          <span class="toggle-handle"></span>
+        </button>
+        <a href="/auth/logout" class="logout-btn">
+          <i class="fas fa-sign-out-alt"></i>
+          Logout
+        </a>
+      </div>
+    </header>
 
-<a href="/auth/logout" class="logout-btn">Logout</a>
-
-<h1>My Tasks</h1>
-
-<!-- Add Task Form -->
-<form action="/tasks" method="POST">
-  <input type="text" name="title" placeholder="Task title" required>
-  <textarea name="description" placeholder="Description"></textarea>
-  <select name="priority" required>
-    <option value="low">Low Priority</option>
-    <option value="medium">Medium Priority</option>
-    <option value="high">High Priority</option>
-  </select>
-  <button type="submit">Add Task</button>
-</form>
-
-<!-- Task List -->
-<ul>
-  <% if (tasks && tasks.length > 0) { %>
-    <% tasks.forEach(task => { %>
-      <li class="<%= task.priority %>">
-        <strong><%= task.title %></strong>
-        <span class="priority-label priority-<%= task.priority %>"><%= task.priority.toUpperCase() %></span>
-        <p><%= task.description %></p>
-
-        <div class="icons">
-          <form action="/tasks/<%= task._id %>?_method=DELETE" method="POST" style="display:inline;">
-            <button type="submit" title="Delete" style="border: none; background: none; padding: 0; cursor: pointer; font-size: 1.2rem;">❌</button>
-          </form>
+    <div class="main-content">
+      <div class="form-section">
+        <h2><i class="fas fa-plus"></i> Add New Task</h2>
+        <form action="/tasks" method="POST">
+          <div class="form-group">
+            <label for="title">Task Title</label>
+            <input type="text" id="title" name="title" placeholder="What needs to be done?" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="description">Description</label>
+            <textarea id="description" name="description" placeholder="Add details..."></textarea>
+          </div>
+          
+          <div class="form-group">
+            <label for="priority">Priority</label>
+            <select id="priority" name="priority" required>
+              <option value="low">Low Priority</option>
+              <option value="medium" selected>Medium Priority</option>
+              <option value="high">High Priority</option>
+            </select>
+          </div>
+          
+          <button type="submit" class="add-btn">
+            <i class="fas fa-plus-circle"></i>
+            Add Task
+          </button>
+        </form>
+      </div>
+      
+      <div class="tasks-section">
+        <h2><i class="fas fa-list-check"></i> My Tasks</h2>
+        
+        <div class="task-filters">
+          <button class="filter-btn active" data-filter="all">All</button>
+          <button class="filter-btn" data-filter="low">Low</button>
+          <button class="filter-btn" data-filter="medium">Medium</button>
+          <button class="filter-btn" data-filter="high">High</button>
         </div>
-      </li>
-    <% }) %>
-  <% } else { %>
-    <p style="text-align: center;">No tasks yet. Add one above!</p>
-  <% } %>
-</ul>
-
+        
+        <ul class="task-list">
+          <% if (tasks && tasks.length > 0) { %>
+            <% tasks.forEach(task => { %>
+              <li class="task-item <%= task.priority %>" data-priority="<%= task.priority %>">
+                <div class="task-header">
+                  <div class="task-title"><%= task.title %></div>
+                  <div class="task-actions">
+                    <form action="/tasks/<%= task._id %>?_method=DELETE" method="POST" style="display:inline;">
+                      <button type="submit" class="task-action-btn delete" title="Delete">
+                        <i class="fas fa-trash-alt"></i>
+                      </button>
+                    </form>
+                  </div>
+                </div>
+                
+                <% if (task.description) { %>
+                  <p class="task-description"><%= task.description %></p>
+                <% } %>
+                
+                <div class="task-footer">
+                  <span class="priority <%= task.priority %>"><%= task.priority.toUpperCase() %></span>
+                  <% if (task.createdAt) { %>
+                    <span class="task-date">
+                      Created: <%= new Date(task.createdAt).toLocaleDateString('en-US', { 
+                        year: 'numeric', 
+                        month: 'short', 
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                      }) %>
+                    </span>
+                  <% } %>
+                </div>
+              </li>
+            <% }) %>
+          <% } else { %>
+            <div class="empty-state">
+              <i class="fas fa-clipboard-list"></i>
+              <h3>No tasks yet</h3>
+              <p>Add your first task using the form on the left!</p>
+            </div>
+          <% } %>
+        </ul>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    // Theme toggle functionality
+    const themeToggle = document.getElementById('themeToggle');
+    const body = document.body;
+    
+    // Check for saved theme preference or respect OS preference
+    const savedTheme = localStorage.getItem('theme');
+    const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+    
+    if (savedTheme === 'dark' || (!savedTheme && prefersDarkScheme.matches)) {
+      body.classList.add('dark-mode');
+      themeToggle.classList.add('dark');
+    }
+    
+    themeToggle.addEventListener('click', () => {
+      body.classList.toggle('dark-mode');
+      themeToggle.classList.toggle('dark');
+      
+      // Save the theme preference
+      if (body.classList.contains('dark-mode')) {
+        localStorage.setItem('theme', 'dark');
+      } else {
+        localStorage.setItem('theme', 'light');
+      }
+    });
+    
+    // Task filtering functionality
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const taskItems = document.querySelectorAll('.task-item');
+    
+    filterButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        // Remove active class from all buttons
+        filterButtons.forEach(btn => btn.classList.remove('active'));
+        // Add active class to clicked button
+        button.classList.add('active');
+        
+        const filter = button.dataset.filter;
+        
+        // Filter tasks
+        taskItems.forEach(task => {
+          if (filter === 'all' || task.dataset.priority === filter) {
+            task.style.display = 'block';
+          } else {
+            task.style.display = 'none';
+          }
+        });
+      });
+    });
+    
+    // Task hover animations
+    taskItems.forEach(task => {
+      task.addEventListener('mouseenter', () => {
+        task.style.transform = 'translateY(-5px)';
+      });
+      
+      task.addEventListener('mouseleave', () => {
+        task.style.transform = 'translateY(0)';
+      });
+    });
+  </script>
 </body>
 </html>
