@@ -23,24 +23,31 @@ export class AuthController {
     return res.render('auth/register', { errors: messages });
   }
 
-  @Post('register')
-  async register(
-    @Body() createUserDto: RegisterDto,
-    @Res() res: Response,
-  ) {
-    try {
-      await this.authService.register(createUserDto);
-      return res.redirect('/tasks');
-    } catch (error) {
-      let messages: string[] = ['Something went wrong.'];
-      if (Array.isArray(error?.response?.message)) {
-        messages = error.response.message;
-      } else if (typeof error?.response?.message === 'string') {
-        messages = [error.response.message];
-      }
-      return res.status(400).render('auth/register', { errors: messages });
+@Post('register')
+async register(
+  @Body() createUserDto: RegisterDto,
+  @Res() res: Response,
+) {
+  try {
+    const user = await this.authService.register(createUserDto);
+
+    // 🔑 Generate JWT
+    const token = this.authService.getToken(user);
+
+    // 🍪 Set cookie
+    res.cookie('jwt', token, { httpOnly: true });
+
+    return res.redirect('/tasks');
+  } catch (error) {
+    let messages: string[] = ['Something went wrong.'];
+    if (Array.isArray(error?.response?.message)) {
+      messages = error.response.message;
+    } else if (typeof error?.response?.message === 'string') {
+      messages = [error.response.message];
     }
+    return res.status(400).render('auth/register', { errors: messages });
   }
+}
 
 
 
